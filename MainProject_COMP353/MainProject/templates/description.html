@@ -1,0 +1,47 @@
+{% extends "baseTemplate.html" %}
+
+{% block title %}{{ super() }} - Description{% endblock %}
+
+<!-- this page gives a description of the show -->
+{% block content %}
+  <div class="titles">
+    <h1>DESCRIPTION</h1>
+  </div>
+  <br>
+  <div class="container">
+    <p style="text-align:justify;">
+      Death Note is a Japanese manga series written by Tsugumi Ohba and
+      illustrated by Takeshi Obata. The story follows Light Yagami, a teen genius
+      who stumbles across a mysterious otherworldly notebook: the "Death Note",
+      which belonged to the Shinigami Ryuk, and grants the user the supernatural
+      ability to kill anyone whose name is written in its pages. The series
+      centers around Light's subsequent attempts to use the Death Note to carry
+      out a world-wide massacre of individuals whom he deems morally unworthy
+      of life to change the world into a utopian society without crime, using
+      the alias of a god-like vigilante named "Kira" ("キラ", the Japanese
+      transliteration of the English word: killer) and the subsequent efforts
+      of an elite task-force of law enforcement officers, consisting of members
+      of the Japanese police force, led by L, an enigmatic international
+      detective whose past is shrouded in mystery, to apprehend him and end his
+      reign of terror.
+    </p>
+    <br>
+    <img src="https://pm1.narvii.com/6492/c78e8d5e27781e83a05aa4c94b7a8ca7e2d8be9d_hq.jpg"
+      alt="Death Note Rules">
+    <br>
+    <hr>
+    <h2 style="font-family:fantasy">FACTS</h2>
+    <hr>
+    <ul id="facts">
+      <li>Death Note has 37 episodes and 12 manga volumes</li>
+      <li>The manga originally ran from December 1, 2003 – May 15, 2006</li>
+      <li>The anime originally ran from October 3, 2006 – June 26, 2007</li>
+      <li>In th original manga, a Death Eraser was introduced that could be used
+        to bring a person back to life as long as their body has not been burned</li>
+      <li>Misa kills herself one year after Light dies</li>
+      <li>Tsugumi Ohba states that L is the smartest character in Death Note</li>
+      <li>In 2015, China banned the anime from the entire country for
+        “encouraging juvenile delinquency."</li>
+    </ul>
+  </div>
+{% endblock %}

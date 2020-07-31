@@ -1,0 +1,138 @@
+{% extends "baseTemplate.html" %}
+
+{% block title %}{{ super() }} - Suggestions{% endblock %}
+<!-- this page gives suggestions to shows that are similar to death note -->
+<!-- this code was done with the help from: https://codepen.io/ongtiffany/pen/PPbPyB
+  in order to get the next and previous buttons -->
+{% block content %}
+  <div class="titles">
+    <h1>SUGGESTIONS</h1>
+  </div>
+  <div class="container">
+    <div id="gallerywrapper">
+	    <div id="gallery">
+		    <div id="table1">
+          <table border="1" class="table table-striped">
+            <tbody>
+              <tr class="toCenter">
+                <th>Code Geass</th>
+              </tr>
+              <tr class="toCenter">
+                <td><img src="https://occ-0-92-1723.1.nflxso.net/dnm/api/v6/E8vDc_W8CLv7-yMQu8KMEC7Rrr8/AAAABTdXX0pleEG-sDruJpbuhQ0YR9p9V5M8MR6M8ft9goUfVwNR3kTIW9VuVtCU6_hJlicomJcbHpdHinGbuHiLWzLPNGA4.jpg?r=b6a"
+                  width=800px alt="anime cover photo"</td>
+              </tr>
+              <tr>
+                <td>
+                  Set in an alternate timeline, the series follows the exiled prince
+                  Lelouch vi Britannia, who obtains the "power of absolute obedience"
+                  from a mysterious woman named C.C. Using this supernatural power,
+                  known as Geass, he leads a rebellion against the rule of the Holy
+                  Britannian Empire, commanding a series of mecha battles.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <a href="#table5" class="previous round">&#8249;</a>
+          <a href="#table2" class="next round">&#8250;</a>
+		    </div>
+
+		    <div id="table2">
+          <table border="1" class="table table-striped">
+            <tbody>
+              <tr class="toCenter">
+                <th>Monster</th>
+              </tr>
+              <tr class="toCenter">
+                <td><img src="https://upload.wikimedia.org/wikipedia/en/thumb/2/2d/Monster_%28manga_-_promo_image%29.jpg/220px-Monster_%28manga_-_promo_image%29.jpg"
+                  width=300px alt="anime cover photo"</td>
+              </tr>
+              <tr>
+                <td>
+                  The story revolves around Kenzo Tenma, a Japanese surgeon living
+                  in Germany whose life enters turmoil after getting himself involved
+                  with Johan Liebert, one of his former patients, who is revealed to
+                  be a dangerous serial killer.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <a href="#table1" class="previous round">&#8249;</a>
+          <a href="#table3" class="next round">&#8250;</a>
+		    </div>
+
+		    <div id="table3">
+          <table border="1" class="table table-striped">
+            <tbody>
+              <tr class="toCenter">
+                <th>Psycho-Pass</th>
+              </tr>
+              <tr class="toCenter">
+                <td><img src="https://revengeofthefans.com/wp-content/uploads/2019/04/feature-image-psycho-pass.jpg"
+                  width=800px alt="anime cover photo"</td>
+              </tr>
+              <tr>
+                <td>
+                   The story takes place in an authoritarian future dystopia, where
+                   omnipresent public sensors continuously scan the mental states of
+                   every passing citizen. When the calculated likelihood of an
+                   individual committing a crime, exceeds an accepted threshold, he
+                   or she is pursued, apprehended, and killed if necessary by police forces.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <a href="#table2" class="previous round">&#8249;</a>
+          <a href="#table4" class="next round">&#8250;</a>
+		    </div>
+
+		    <div id="table4">
+          <table border="1" class="table table-striped">
+            <tbody>
+              <tr class="toCenter">
+                <th>Mirai Nikki</th>
+              </tr>
+              <tr class="toCenter">
+                <td><img src="https://upload.wikimedia.org/wikipedia/en/thumb/5/54/Mirainikkicover.jpg/220px-Mirainikkicover.jpg"
+                  width=300px alt="anime cover photo"</td>
+              </tr>
+              <tr>
+                <td>
+                   The plot depicts the Diary Game, a deadly battle royal between 12
+                   different individuals who are given "Future Diaries", special
+                   diaries that can predict the future, by Deus Ex Machina, the God of
+                   Time and Space, with the last survivor becoming his heir.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <a href="#table3" class="previous round">&#8249;</a>
+          <a href="#table5" class="next round">&#8250;</a>
+		    </div>
+
+		    <div id="table5">
+          <table border="1" class="table table-striped">
+            <tbody>
+              <tr class="toCenter">
+                <th>Boku dake ga Inai Machi</th>
+              </tr>
+              <tr class="toCenter">
+                <td><img src="https://m.media-amazon.com/images/M/MV5BZWU0OTkxMWQtZTFlNi00YTgxLWJkYmYtYzM0ODYyZjhkYTM0XkEyXkFqcGdeQXVyMTg2NzgzMDE@._V1_UY268_CR6,0,182,268_AL_.jpg"
+                  width=300px alt="anime cover photo"</td>
+              </tr>
+              <tr>
+                <td>
+                   The story follows Satoru Fujinuma, a young man who somehow
+                   possesses an ability known as "Revival" which sends him back in
+                   time moments before a life-threatening incident which enables
+                   him to prevent it from happening again.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <a href="#table4" class="previous round">&#8249;</a>
+          <a href="#table1" class="next round">&#8250;</a>
+        </div>
+		    </div>
+	    </div>
+	</div>
+{% endblock %}

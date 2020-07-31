@@ -1,0 +1,321 @@
+
+.container, .toCenter
+{
+  text-align: center;
+}
+
+/* blog post in profile page */
+#discuss
+{
+  text-align: left;
+  float:right;
+  margin-right: 10%;
+}
+
+/*user info in profile page */
+#userInfo
+{
+  text-align: left;
+  margin-left: 10%;
+  float: left;
+}
+/*for base template*/
+#page-container
+{
+  position: relative;
+  min-height: 100vh;
+}
+
+/*space between content and footer*/
+#content-wrap
+{
+  padding-bottom: 20rem;    /* Footer height */
+}
+
+/* footer */
+#footer
+{
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background-color: black;
+  color: white;
+  text-align: center;
+  padding-top: 10px;
+}
+#footerTable
+{
+  margin: auto;
+}
+
+/*home page side bar*/
+#sidebar
+{
+  float: left;
+  width: 50%;
+  background-color: lightgray;
+  padding-top: 30px;
+  padding-left: 30px;
+  padding-right: 30px;
+  padding-bottom: 500em;
+  margin-bottom: -500em;
+}
+/*home page website description*/
+#homeContent
+{
+  float: right;
+  width: 50%;
+  background-color: lightgray;
+  padding-top: 30px;
+  padding-left: 30px;
+  padding-right: 30px;
+  padding-bottom: 500em;
+  margin-bottom: -500em;
+}
+
+/* links in sidebar on home page and in the about content page*/
+.link a:link, .link a:visited
+{
+  color: black;
+}
+.link a:hover
+{
+  color: red;
+}
+
+/* page that contains two inner divs within a div */
+.page
+{
+  overflow:hidden;
+  width: 100%;
+}
+
+p{ text-align: justify; }
+
+/*main titles for each page */
+.titles
+{
+  background-image: linear-gradient(black,white);
+  text-align: center;
+  color:white;
+  padding: 20px;
+  padding-top:30px;
+}
+
+h1 { font-family:fantasy; }
+
+/*user name in blog post*/
+#user{ display: inline; }
+
+/*image in discussion page */
+.littleProfile
+{
+  border-radius: 10%;
+  text-align:left;
+}
+
+/*facts for description page */
+#facts{ text-align: left; }
+
+/*about me page */
+#me
+ {
+   text-align: justify;
+   margin-left: 350px;
+   margin-right: 350px;
+   margin-top: 10px;
+ }
+
+/*delete button for blog post */
+button
+{
+  float: right;
+}
+ /*forgot password image*/
+#imgRegisterRight
+{
+  float:right;
+  width:50%;
+  margin-top: -14em;
+  margin-bottom: -30em;
+}
+/*register page image*/
+#imgRegisterLeft
+{
+  float:left;
+  width:50%;
+  margin-top: -12em;
+  margin-bottom: -50em;
+}
+/*reset password conetent form */
+#resetPass
+{
+  float:left;
+  width:50%;
+  background-color:lightgray;
+}
+/*register content form */
+#register
+{
+  float:right;
+  width:50%;
+  background-color:lightgray;
+}
+
+/*outer div that contains two inner divs of the form of
+forgot_password and register */
+.register_password
+{
+  text-align: left;
+  margin-top:30px;
+  padding:30px;
+}
+
+/*form style in login, register and forgot_password page*/
+label
+{
+  text-align: left;
+  font-size: xx-large;
+  font-family:"Times New Roman";
+}
+input
+{
+  font-size: x-large;
+  font-family:"Times New Roman"
+}
+select
+{
+  font-size: large;
+  font-family:"Times New Roman"
+}
+form
+{
+  padding:30px;
+}
+/*image in login page*/
+#loginImg
+{
+  width:150px;
+  border-radius: 50%;
+}
+/*font of text in login page */
+.loginFont
+{
+  font-family:"Times New Roman";
+}
+/*container for login page*/
+#loginContainer
+{
+  margin-top:30px;
+  padding:30px;
+  width: 700px;
+  background-color: lightgray;
+  padding-top: 30px;
+}
+
+
+/* the code below was written with the help of: https://codepen.io/ongtiffany/pen/PPbPyB*/
+#gallerywrapper {
+     width:1000px;
+     height:800px;
+     margin:0 auto;
+     position:relative;
+     font-family:verdana, arial, sans-serif;
+ }
+
+ #gallerywrapper #gallery {
+     position:absolute;
+     left:0;
+     top:0;
+     height:1000px;
+     width:1000px;
+     overflow:hidden;
+     text-align:center;
+ }
+
+ #gallerywrapper #gallery div {
+     width:1000px; height:1000px;
+     padding-top:10px;
+     position:relative;
+ }
+
+ #gallerywrapper #gallery div table {
+     clear:both;
+     display:block;
+     margin:0 auto;
+     border:0;
+     margin-top: 30px;
+ }
+
+ #gallerywrapper #gallery div{
+     padding:10px 0 0 0;
+     margin:0;
+     font-size:18px;
+ }
+
+ #gallerywrapper #gallery div p {
+     padding:5px 0;
+     margin:0;
+     font-size:12px;
+     line-height:18px;
+ }
+
+ #gallery .previous{
+     display:inline;
+     text-decoration:none;
+     padding: 8px 16px;
+     background-color: black;
+     color: white;
+     border-radius: 50%;
+ }
+
+ #gallery .next{
+     display:inline;
+     text-decoration:none;
+     padding: 8px 16px;
+     background-color: black;
+     color: white;
+     border-radius: 50%;
+ }
+
+#gallery a:hover {
+   background-color: maroon;
+   color: black;
+ }
+/* end */
+
+/*the code below was written with the help of: https://github.com/CoreyMSchafer/code_snippets/blob/master/Python/Flask_Blog/08-Posts/flaskblog/static/main.css */
+.content-section
+{
+ background: #ffffff;
+ padding: 10px 20px;
+ border: 1px solid #dddddd;
+ border-radius: 3px;
+ margin-bottom: 20px;
+}
+
+.article-title {
+  color: black;
+  text-align: left;
+  padding-left: 15px;
+}
+
+.article-content {
+  white-space: pre-line;
+  text-align: justify;
+  padding-left: 15px;
+}
+
+.article-metadata {
+  padding-left: 15px;
+  padding-bottom: 1px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid #e3e3e3;
+  text-align: left;
+}
+
+.form-control-label
+{
+  background-color: white;
+}
+/*end */

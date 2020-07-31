@@ -1,0 +1,55 @@
+{% extends "baseTemplate.html" %}
+{% macro render_field(field) %}
+  <dt>{{ field.label }}
+  <dd>{{ field(**kwargs)|safe }}
+  {% if field.errors %}
+    <ul class=errors>
+    {% for error in field.errors %}
+      <li>{{ error }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+  </dd>
+{% endmacro %}
+{% block title %}{{ super() }} - Profile{% endblock %}
+<!-- user profile page, this indicates that the user is logged in
+  here the user can see their information and is able to make post -->
+{% block content %}
+  <div class="titles">
+    <h1>PROFILE</h1>
+  </div>
+  <div class="container">
+    <div class="page">
+        <div>
+            <h1>Username: {{ current_user.username }}</h1>
+            <h1>Email: {{ current_user.email }}</h1>
+            <br />
+             <div id="register" class="col-sm">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+      {%  if messages %}
+          {% for category, message in messages %}
+              <div class="alert alert-{{ category }}">
+                {{ message }}
+              </div>
+          {% endfor %}
+      {%  endif %}
+  {% endwith %}
+  <!-- form to fill in information -->
+  <form action="/register" method="post" class="col-sm">
+      {{ form.csrf_token }}
+      <dl>
+          {{ render_field(form.username) }}
+          <br>
+          {{ render_field(form.email) }}
+          <br>
+          {{ form.submit }}
+          <br />
+      </dl>
+  </form>
+  </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+{% endblock %}
