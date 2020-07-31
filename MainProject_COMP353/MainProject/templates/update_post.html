@@ -1,0 +1,33 @@
+<!-- Code inspired from https://github.com/CoreyMSchafer/code_snippets/tree/master/Python/Flask_Blog/08-Posts/flaskblog -->
+
+{% extends "baseTemplate.html" %}
+{% block title %}{{ super() }} - {{ title }}{% endblock %}
+<!-- user profile page, this indicates that the user is logged in
+  here the user can see their information and is able to make post -->
+{% block content %}
+ <h1 class="titles">{{ legend }}</h1>
+<div class="container" id = "loginContainer">
+    <p>
+      <h3 class="loginFont"><Strong>Already a member?</Strong></h3>
+      Sign into your account
+    <p class="loginFont">
+    <hr>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {%  if messages %}
+          {% for category, message in messages %}
+              <div class="alert alert-{{ category }}">
+                {{ message }}
+              </div>
+          {% endfor %}
+      {%  endif %}
+  {% endwith %}
+    <form action="{{ url_for('update_post') }}" method="post">
+        {{ form.csrf_token }}
+        <h3 class="loginFont">Title</h3>
+        {{ form.title }}<br/><br>
+        <h3 class="loginFont">Content</h3>
+        {{ form.content }}<br/>
+        {{ form.submit(class="btn btn-outline-info") }}
+    </form>
+</div>
+{% endblock %}
