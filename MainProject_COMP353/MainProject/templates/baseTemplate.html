@@ -1,95 +1,84 @@
-<!-- this is the base template that most other pages will inherit.
-They will inherit the navigation bar as well as the footer -->
+<!-- Code inspired from https://github.com/CoreyMSchafer/code_snippets/tree/master/Python/Flask_Blog/08-Posts/flaskblog -->
+
 <!DOCTYPE html>
 <html>
-  <head>{% block head %}
-    <meta charset="UTF-8">
-    <title>{% block title %}Death Note Fan Page{% endblock %}</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    <style>body {
-        padding-top: 70px
-    }</style>
-    <link rel="stylesheet" type="text/css" href="../static/css/styles.css">
-  {% endblock %}</head>
-  <body>
-    {% for message in get_flashed_messages() %}
-        {{ message }}<br/>
-    {% endfor %}
-    <!-- nav-bar -->
-    <div id="page-container">
-      {% block header %}
-      <nav class="navbar navbar-expand-md bg-dark navbar-dark fixed-top">
-      <a class="navbar-brand" href="/">
-      <img src="https://img4.goodfon.com/wallpaper/nbig/5/6f/ryuk-death-note-tetrad-smerti-riuk-smert.jpg" width=60px alt="logo"></a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-          <span class="navbar-toggler-icon"></span>
-      </button>
-        <div class="collapse navbar-collapse" id="collapsibleNavbar">
-          <ul class="navbar-nav">
-              <li class="nav-item">
-                  <a class="nav-link" href="/description">Description</a>
-              </li>
-              <li class="nav-item">
-                  <a class="nav-link" href="/characters">Characters</a>
-              </li>
-              <li class="nav-item">
-                  <a class="nav-link" href="/discussion">Discussion</a>
-              </li>
-              <li class="nav-item">
-                  <a class="nav-link" href="/suggestions">Suggestions</a>
-              </li>
-          </ul>
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+
+    {% if title %}
+        <title>Main Project - {{ title }}</title>
+    {% else %}
+        <title>Main Project</title>
+    {% endif %}
+</head>
+<body>
+    <header class="site-header">
+      <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
+        <div class="container">
+          <a class="navbar-brand mr-4" href="/">Main Project</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarToggle">
+            <div class="navbar-nav mr-auto">
+              <a class="nav-item nav-link" href="{{ url_for('home') }}">Home</a>
+{#              <a class="nav-item nav-link" href="{{ url_for('about') }}">About</a>#}
+            </div>
+            <!-- Navbar Right Side -->
+            <div class="navbar-nav">
+              {% if current_user.is_authenticated %}
+                <a class="nav-item nav-link" href="{{ url_for('new_post') }}">New Post</a>
+                <a class="nav-item nav-link" href="{{ url_for('profile') }}">Profile</a>
+                <a class="nav-item nav-link" href="{{ url_for('logout') }}">Logout</a>
+              {% else %}
+                <a class="nav-item nav-link" href="{{ url_for('login') }}">Login</a>
+                <a class="nav-item nav-link" href="{{ url_for('register') }}">Register</a>
+              {% endif %}
+            </div>
+          </div>
         </div>
-        <!-- if authenticated then the user has the option to logout or
-            view their profile, otherwise, user has the option to login or register -->
-          {% if current_user.is_authenticated %}
-              <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
-              <a class="nav-link" href="{{ url_for('profile') }}">Profile</a>
-          {% else %}
-              <a class="nav-link" href="{{ url_for('login') }}" style="float:right; color:white;">Login</a>
-              <a class="nav-link" href="{{ url_for('register') }}" style="float:right; color:white;">Register</a>
-          {% endif %}
-
       </nav>
-    {% endblock %}
-  <div id="content-wrap">
-    {% block content %}
-    {% endblock %}
-  </div>
-  <!-- footer -->
-  <div id="footer">
-    {% block footer %}
-      <table id="footerTable">
-        <tbody>
-          <tr>
-            <td>
-              <a href="/aboutMe">
-              <img src="https://vignette.wikia.nocookie.net/deathnote/images/0/05/299276.jpg/revision/latest/scale-to-width-down/2000?cb=20160609084120"
-               width= 70px alt= "Light Yagami" ></a>
-            </td>
-            <td><p>     </p></td>
-            <td>
-              <a href="/aboutContent">
-              <img src="https://vignette.wikia.nocookie.net/deathnote/images/7/76/299276L.jpg/revision/latest?cb=20160609084420"
-              width= 73px alt= "L" ></a>
-            </td>
-          </tr>
-          <tr>
-            <th>Creator</th>
-            <th><p>     </p></th>
-            <th>Content</th>
-          </tr>
-        </tbody>
-      </table>
-      <br>
-      <p class="toCenter">This is a website produced by a student from Concordia University.</p>
-  {% endblock %}
-  </div>
-  </div>
-  </body>
+    </header>
+    <main role="main" class="container">
+      <div class="row">
+        <div class="col-md-8">
+          {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+              {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                  {{ message }}
+                </div>
+              {% endfor %}
+            {% endif %}
+          {% endwith %}
+          {% block content %}{% endblock %}
+        </div>
+        <div class="col-md-4">
+          <div class="content-section">
+            <h3>Our Sidebar</h3>
+            <p class='text-muted'>You can put any information here you'd like.
+              <ul class="list-group">
+                <li class="list-group-item list-group-item-light">Latest Posts</li>
+                <li class="list-group-item list-group-item-light">Announcements</li>
+                <li class="list-group-item list-group-item-light">Calendars</li>
+                <li class="list-group-item list-group-item-light">etc</li>
+              </ul>
+            </p>
+          </div>
+        </div>
+      </div>
+    </main>
 
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
 </html>

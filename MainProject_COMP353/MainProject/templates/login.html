@@ -1,48 +1,54 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Death Note FanPage- Login</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="../static/css/styles.css">
+<!-- Code inspired from https://github.com/CoreyMSchafer/code_snippets/tree/master/Python/Flask_Blog/08-Posts/flaskblog -->
 
-</head>
-<body>
-<h1 class="titles">Login</h1>
-<div class="container" id = "loginContainer">
-    <img src="https://camo.githubusercontent.com/01b35034f6c2d1c8670559d0a989b0d05a46f1aa/68747470733a2f2f7773332e73696e61696d672e636e2f6c617267652f303036744e633739677931666979387a32756a37616a3330377a30377a7133682e6a7067"
-        alt="Death Note Skull" id="loginImg">
-    <br>
-    <p>
-      <h3 class="loginFont"><Strong>Already a member?</Strong></h3>
-      Sign into your account
-    <p class="loginFont">
-    <hr>
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {%  if messages %}
-          {% for category, message in messages %}
-              <div class="alert alert-{{ category }}">
-                {{ message }}
-              </div>
-          {% endfor %}
-      {%  endif %}
-  {% endwith %}
-    <form action="/login" method="post">
-        {{ form.csrf_token }}
-        <h3 class="loginFont">Username</h3>
-        {{ form.username }}<br/><br>
-        <h3 class="loginFont">Password</h3>
-        {{ form.password }}<br/>
-        <div class="form-check">
-            {{ form.remember(class="form-check-input") }} {{ form.remember.label(class="form-check-input") }}<br /> <br />
-        </div>
-        <a class="link" href="/forgot_password">Forgot password?</a><br><br>
-        {{ form.submit }}
-    </form>
-</div>
-</body>
-</html>
+{% extends "baseTemplate.html" %}
+{% block content %}
+    <div class="content-section">
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Log In</legend>
+                <div class="form-group">
+                    {{ form.username.label(class="form-control-label") }}
+                    {% if form.username.errors %}
+                        {{ form.username(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.username.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.username(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.password.label(class="form-control-label") }}
+                    {% if form.password.errors %}
+                        {{ form.password(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.password.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.password(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+                <div class="form-check">
+                    {{ form.remember(class="form-check-input") }}
+                    {{ form.remember.label(class="form-check-label") }}
+                </div>
+            </fieldset>
+            <div class="form-group">
+                {{ form.submit(class="btn btn-outline-info") }}
+            </div>
+            <small class="text-muted ml-2">
+                <a href="#">Forgot Password?</a>
+            </small>
+        </form>
+    </div>
+    <div class="border-top pt-3">
+        <small class="text-muted">
+            Need An Account? <a class="ml-2" href="{{ url_for('register') }}">Sign Up Now</a>
+        </small>
+    </div>
+{% endblock content %}
