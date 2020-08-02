@@ -2,6 +2,8 @@
 
 import os
 import secrets
+from datetime import datetime
+
 from flask import render_template, url_for, flash, redirect, request, abort
 from MainProject import app, db, bcrypt
 from MainProject.forms import RegistrationForm, LoginForm, UpdateAccountForm, PostForm
@@ -12,8 +14,8 @@ from flask_login import login_user, current_user, logout_user, login_required
 @app.route("/")
 @app.route("/home")
 def home():
-    posts = Post.query.all()
-    return render_template('home.html', posts=posts)
+    #posts = Post.query.all()
+    return render_template('home.html')#, posts=posts)
 
 
 @app.route("/about")
@@ -59,25 +61,37 @@ def logout():
     return redirect(url_for('home'))
 
 
+num = 0
 @app.route("/profile", methods=['GET', 'POST'])
 @login_required
 def profile():
     form = UpdateAccountForm()
+    print("START: " + current_user.category)
     if form.validate_on_submit():
         current_user.username = form.username.data
         current_user.email = form.email.data
+        current_user.category = dict(form.category.choices).get(form.category.data)
+        num = form.category.data
+        print(dict(form.category.choices).get(form.category.data))
+       # print(dict(form['User Category'].choices)[current_user.category])
+       # if (current_user.category == 'Basic - Free'):
+       #     current_user.monthlyCharges = 0
+       # elif (current_user.category == 'Prime - 10$/month'):
+       #     current_user.monthlyCharges = 10
+       # elif (current_user.category == 'Gold - 20$/month'):
+       #    current_user.monthlyCharges = 20
         db.session.commit()
         flash('Your profile has been updated!', 'success')
         return redirect(url_for('profile'))
     elif request.method == 'GET':
-        form.username.data = current_user.username
-        form.email.data = current_user.email
+        print("ELSE: " + current_user.category)
+        #form.username.data = current_user.username
+        #form.email.data = current_user.email
+        #form.category.data = current_user.category
+        #print("NUM: " + num)
+        form = UpdateAccountForm(username = current_user.username, email = current_user.email, category = 10)
     return render_template('profile.html', title='Profile', form=form)
 
-
-@app.route('/about')
-def about():
-    return render_template('about.html')
 
 
 @app.route("/post/new", methods=['GET', 'POST'])

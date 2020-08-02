@@ -15,6 +15,8 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(60), nullable=False)
     posts = db.relationship('Post', backref='author', lazy=True)
+    category = db.Column(db.String(20), nullable=False, default='Basic - Free')
+    monthlyCharges = db.Column(db.Integer, nullable=False, default=0)
 
     def __repr__(self):
         return f"User('{self.username}', '{self.email}')"

@@ -3,12 +3,14 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
 from flask_login import current_user
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, SelectField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from MainProject.models import User
 
 
 class RegistrationForm(FlaskForm):
+    userType = SelectField('Type of User', coerce=int,
+                choices=[(1, 'Administrator'), (2, 'Employer'), (3, 'Employee/User')])
     username = StringField('Username',
                            validators=[DataRequired(), Length(min=2, max=20)])
     email = StringField('Email',
@@ -17,6 +19,8 @@ class RegistrationForm(FlaskForm):
     confirm_password = PasswordField('Confirm Password',
                                      validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Sign Up')
+
+
 
     def validate_username(self, username):
         user = User.query.filter_by(username=username.data).first()
@@ -41,6 +45,8 @@ class UpdateAccountForm(FlaskForm):
                            validators=[DataRequired(), Length(min=2, max=20)])
     email = StringField('Email',
                         validators=[DataRequired(), Email()])
+    category = SelectField('User Category', coerce= int,
+                choices=[(0,'Basic - Free'), (10,'Prime - 10$/month'), (20,'Gold - 20$/month')])
     submit = SubmitField('Update')
 
     def validate_username(self, username):
