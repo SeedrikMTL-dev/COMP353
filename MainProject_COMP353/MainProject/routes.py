@@ -31,7 +31,7 @@ def register():
     form = RegistrationForm()
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        user = User(username=form.username.data, email=form.email.data, password=hashed_password)
+        user = User(email=form.email.data, name=form.name.data, password=hashed_password, userType=form.userType.data)
         db.session.add(user)
         db.session.commit()
         flash('Your account is created!', 'success')
@@ -46,13 +46,13 @@ def login():
         return redirect(url_for('home'))
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(username=form.username.data).first()
+        user = User.query.filter_by(email=form.email.data).first()
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user, remember=form.remember.data)
             next_page = request.args.get('next')
             return redirect(next_page) if next_page else redirect(url_for('home'))
         else:
-            flash('Login unsuccessful. Please check username and password', 'danger')
+            flash('Login Unsuccessful. Please check email and password', 'danger')
     return render_template('login.html', title='Login', form=form)
 
 
@@ -67,14 +67,14 @@ def logout():
 def profile():
     form = UpdateAccountForm()
     if form.validate_on_submit():
-        current_user.username = form.username.data
         current_user.email = form.email.data
+        current_user.name = form.name.data
         db.session.commit()
         flash('Your profile has been updated!', 'success')
         return redirect(url_for('profile'))
     elif request.method == 'GET':
-        form.username.data = current_user.username
         form.email.data = current_user.email
+        form.name.data = current_user.name
     return render_template('profile.html', title='Profile', form=form)
 
 
@@ -135,10 +135,10 @@ def delete_post(post_id):
     return redirect(url_for('home'))
 
 
-@app.route("/user/<string:username>")  # route to show all posts of that username
-def user_posts(username):
+@app.route("/user/<string:name>")  # route to show all posts of that email
+def user_posts(name):
     page = request.args.get('page', 1, type=int)
-    user = User.query.filter_by(username=username).first_or_404()
+    user = User.query.filter_by(name=name).first_or_404()
     posts = Post.query.filter_by(author=user).order_by(Post.date_posted.desc()).paginate(page=page, per_page=5)
     return render_template('user_post.html', posts=posts, user=user)
 
@@ -165,7 +165,7 @@ def reset_request():
         user = User.query.filter_by(email=form.email.data).first()
         send_reset_email(user)
         flash('An email has been sent with instructions to reset your password', 'info')
-        return  redirect(url_for('login'))
+        return redirect(url_for('login'))
     return render_template('reset_request.html', title='Reset Password', form=form)
 
 

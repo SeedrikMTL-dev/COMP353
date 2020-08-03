@@ -12,9 +12,10 @@ def load_user(user_id):
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(20), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
+    name = db.Column(db.String(120), nullable=False)
     password = db.Column(db.String(60), nullable=False)
+    userType = db.Column(db.String(20), nullable=False)
     posts = db.relationship('Post', backref='author', lazy=True)
 
     def get_reset_token(self, expires_sec=1800):
@@ -31,7 +32,21 @@ class User(db.Model, UserMixin):
         return User.query.get(user_id)
 
     def __repr__(self):
-        return f"User('{self.username}', '{self.email}')"
+        return f"User('{self.email}')"
+
+
+class Employee(User):
+    employeeCategory = db.Column(db.String(20), nullable=False, default='Basic - Free')
+
+    def __repr__(self):
+        return f"Employee('{self.email}', '{self.employeeCategory}')"
+
+
+class Employer(User):
+    employerCategory = db.Column(db.String(20), nullable=False, default='Prime - 50$/month')
+
+    def __repr__(self):
+        return f"Employer('{self.email}', '{self.employerCategory}')"
 
 
 class Post(db.Model):
