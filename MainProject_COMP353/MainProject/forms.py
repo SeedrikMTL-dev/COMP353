@@ -45,8 +45,8 @@ class UpdateAccountForm(FlaskForm):
                            validators=[DataRequired(), Length(min=2, max=20)])
     email = StringField('Email',
                         validators=[DataRequired(), Email()])
-    category = SelectField('User Category', coerce= int,
-                choices=[(0,'Basic - Free'), (10,'Prime - 10$/month'), (20,'Gold - 20$/month')])
+    #category = SelectField('User Category', coerce= int,
+    #            choices=[(0,'Basic - Free'), (10,'Prime - 10$/month'), (20,'Gold - 20$/month')])
     submit = SubmitField('Update')
 
     def validate_username(self, username):

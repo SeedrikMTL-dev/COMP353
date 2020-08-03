@@ -7,7 +7,7 @@ from datetime import datetime
 from flask import render_template, url_for, flash, redirect, request, abort
 from MainProject import app, db, bcrypt
 from MainProject.forms import RegistrationForm, LoginForm, UpdateAccountForm, PostForm
-from MainProject.models import User, Post
+from MainProject.models import User, Post, Employee, Employer
 from flask_login import login_user, current_user, logout_user, login_required
 
 
@@ -28,11 +28,23 @@ def register():
     if current_user.is_authenticated:
         return redirect(url_for('home'))
     form = RegistrationForm()
+    print(form.userType.data)
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        user = User(username=form.username.data, email=form.email.data, password=hashed_password)
+        user = User(username=form.username.data, email=form.email.data, password=hashed_password,
+                    userType=form.userType.data)
         db.session.add(user)
         db.session.commit()
+        if (form.userType.data == 2):
+            employer = Employer(username=form.username.data, email=form.email.data, password=hashed_password,
+                                userType=form.userType.data)
+            db.session.add(employer)
+            db.session.commit()
+        elif (form.userType.data == 3):
+            employee = Employee(username=form.username.data, email=form.email.data, password=hashed_password,
+                    userType=form.userType.data)
+            db.session.add(employee)
+            db.session.commit()
         flash('Your account is created!', 'success')
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
@@ -61,35 +73,22 @@ def logout():
     return redirect(url_for('home'))
 
 
-num = 0
 @app.route("/profile", methods=['GET', 'POST'])
 @login_required
 def profile():
     form = UpdateAccountForm()
-    print("START: " + current_user.category)
     if form.validate_on_submit():
         current_user.username = form.username.data
         current_user.email = form.email.data
-        current_user.category = dict(form.category.choices).get(form.category.data)
-        num = form.category.data
-        print(dict(form.category.choices).get(form.category.data))
-       # print(dict(form['User Category'].choices)[current_user.category])
-       # if (current_user.category == 'Basic - Free'):
-       #     current_user.monthlyCharges = 0
-       # elif (current_user.category == 'Prime - 10$/month'):
-       #     current_user.monthlyCharges = 10
-       # elif (current_user.category == 'Gold - 20$/month'):
-       #    current_user.monthlyCharges = 20
+       # current_user.category = dict(form.category.choices).get(form.category.data)
+       # current_user.monthlyCharges = form.category.data
         db.session.commit()
         flash('Your profile has been updated!', 'success')
         return redirect(url_for('profile'))
     elif request.method == 'GET':
-        print("ELSE: " + current_user.category)
-        #form.username.data = current_user.username
-        #form.email.data = current_user.email
-        #form.category.data = current_user.category
-        #print("NUM: " + num)
-        form = UpdateAccountForm(username = current_user.username, email = current_user.email, category = 10)
+        form.username.data = current_user.username
+        form.email.data = current_user.email
+        #form.category.data = current_user.monthlyCharges
     return render_template('profile.html', title='Profile', form=form)
 
 
