@@ -5,6 +5,7 @@ from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from MainProject import db, login_manager, app
 from flask_login import UserMixin
 
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -15,7 +16,9 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(120), unique=True, nullable=False)
     name = db.Column(db.String(120), nullable=False)
     password = db.Column(db.String(60), nullable=False)
-    userType = db.Column(db.String(20), nullable=False)
+    userType = db.Column(db.String(60), nullable=False)
+    monthlyChargesEmployer = db.Column(db.String(60), nullable=False, default='')
+    monthlyChargesEmployee = db.Column(db.String(60), nullable=False, default='')
     posts = db.relationship('Post', backref='author', lazy=True)
 
     def get_reset_token(self, expires_sec=1800):
@@ -33,20 +36,6 @@ class User(db.Model, UserMixin):
 
     def __repr__(self):
         return f"User('{self.email}')"
-
-
-class Employee(User):
-    employeeCategory = db.Column(db.String(20), nullable=False, default='Basic - Free')
-
-    def __repr__(self):
-        return f"Employee('{self.email}', '{self.employeeCategory}')"
-
-
-class Employer(User):
-    employerCategory = db.Column(db.String(20), nullable=False, default='Prime - 50$/month')
-
-    def __repr__(self):
-        return f"Employer('{self.email}', '{self.employerCategory}')"
 
 
 class Post(db.Model):

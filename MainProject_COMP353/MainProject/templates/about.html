@@ -1,32 +1,17 @@
 <!-- Code inspired from https://github.com/CoreyMSchafer/code_snippets/tree/master/Python/Flask_Blog/08-Posts/flaskblog -->
 
 {% extends "baseTemplate.html" %}
-
-{% block title %}{{ super() }} - About Content{% endblock %}
-
 {% block content %}
-<!-- page for bibliography of where i got my information from -->
-<div class="titles">
-  <h1 style="font-family:fantasy">ABOUT CONTENT</h1>
-</div>
-    <div class="container"><br>
-      <h5><u>Links to Information used for this Website</u></h5>
-      <div class="toCenter link">
-        <br>
-        <a href="https://en.wikipedia.org/wiki/Death_Note">Death Note Description</a><br>
-        <a href="https://www.thegamer.com/horrifying-dark-facts-you-didnt-know-about-death-note/">Death Note Facts</a><br>
-        <a href="https://deathnote.fandom.com/wiki/Light_Yagami">Light Yagami Description</a><br>
-        <a href="https://deathnote.fandom.com/wiki/L_(character)">L Description</a><br>
-        <a href="https://deathnote.fandom.com/wiki/Ryuk">Ryuk Description</a><br>
-        <a href="https://deathnote.fandom.com/wiki/Misa_Amane">Misa Description</a><br>
-        <a href="https://deathnote.fandom.com/wiki/Rem">Rem Description</a><br>
-        <a href="https://deathnote.fandom.com/wiki/Near">Near Description</a><br>
-        <a href="https://deathnote.fandom.com/wiki/Mello">Mello Description</a><br>
-        <a href="https://en.wikipedia.org/wiki/Code_Geass">Code Geass Description</a><br>
-        <a href="https://en.wikipedia.org/wiki/Monster_(manga)">Monster Description</a><br>
-        <a href="https://en.wikipedia.org/wiki/Psycho-Pass">Psycho-Pass Description</a><br>
-        <a href="https://en.wikipedia.org/wiki/Future_Diary">Mirai Nikki Description</a><br>
-        <a href="https://en.wikipedia.org/wiki/Erased_(manga)">Boku dake ga Inai Machi Description</a>
+    <div class="content-section">
+      <div class="media">
+        <div class="media-body">
+            {% if current_user.is_authenticated %}
+                <h2 class="account-heading">Hi {{ current_user.name }}, having issues?</h2>
+            {% else %}
+                <h2 class="account-heading">Hi there, having issues?</h2>
+            {% endif %}
+          <p class="text-secondary">Send us an email <a href="mailto:MainProject353@gmail.com">Here</a></p>
+        </div>
       </div>
     </div>
-{% endblock %}
+{% endblock content %}

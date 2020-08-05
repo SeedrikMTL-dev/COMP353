@@ -9,7 +9,7 @@ from MainProject.models import User
 
 
 class RegistrationForm(FlaskForm):
-    userType = SelectField('Type of User', choices=['Administrator', 'Employer', 'Employee/User'])
+    userType = SelectField('Type of User', choices=['Administrator', 'Employer', 'Employee'], default='Administrator')
     name = StringField('Name', validators=[DataRequired()])
     email = StringField('Email',
                         validators=[DataRequired(), Email()])
@@ -36,6 +36,10 @@ class UpdateAccountForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
     email = StringField('Email',
                         validators=[DataRequired(), Email()])
+    monthlyChargesEmployer = SelectField('Plan', choices=['Prime - 50$/hour', 'Gold - 100$/hour'],
+                                         default='Prime - 50$/hour')
+    monthlyChargesEmployee = SelectField('Plan', choices=['Basic - No Charge', 'Prime - 10$/hour', 'Gold - 20$/hour'],
+                                         default='Basic - No Charge')
     submit = SubmitField('Update')
 
     def validate_email(self, email):

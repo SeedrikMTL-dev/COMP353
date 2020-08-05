@@ -34,10 +34,12 @@ def register():
         user = User(email=form.email.data, name=form.name.data, password=hashed_password, userType=form.userType.data)
         db.session.add(user)
         db.session.commit()
-        flash('Your account is created!', 'success')
+        flash(user.userType, 'warning')
+        flash('Your account has been created! You are now able to log in', 'success')
         return redirect(url_for('login'))
+    else:
+        print(form.errors)
     return render_template('register.html', title='Register', form=form)
-
 
 
 @app.route("/login", methods=['GET', 'POST'])
@@ -69,18 +71,21 @@ def profile():
     if form.validate_on_submit():
         current_user.email = form.email.data
         current_user.name = form.name.data
+        if current_user.userType == 'Employer':
+            current_user.monthlyChargesEmployer = form.monthlyChargesEmployer.data
+        if current_user.userType == 'Employee':
+            current_user.monthlyChargesEmployee = form.monthlyChargesEmployee.data
         db.session.commit()
         flash('Your profile has been updated!', 'success')
         return redirect(url_for('profile'))
     elif request.method == 'GET':
         form.email.data = current_user.email
         form.name.data = current_user.name
+        if current_user.userType == 'Employer':
+            form.monthlyChargesEmployer.data = current_user.monthlyChargesEmployer
+        if current_user.userType == 'Employee':
+            form.monthlyChargesEmployee.data = current_user.monthlyChargesEmployee
     return render_template('profile.html', title='Profile', form=form)
-
-
-@app.route('/about')
-def about():
-    return render_template('about.html')
 
 
 @app.route("/post/new", methods=['GET', 'POST'])

@@ -6,9 +6,15 @@
       <div class="media">
         <div class="media-body">
           <h2 class="account-heading">{{ current_user.name }}</h2>
-          <p class="text-secondary">Current User Type: {{ current_user.userType }}</p>
-            <p class="text-secondary">Current User: {{ current_user }}</p>
-            <p class="text-secondary">Current User email: {{ current_user.email }}</p>
+          <p class="text-secondary">User Type: {{ current_user.userType }}</p>
+            <p class="text-secondary">User: {{ current_user }}</p>
+            <p class="text-secondary">Email: {{ current_user.email }}</p>
+            {% if current_user.userType|string() == 'Employer' %}
+            <p class="text-secondary">Monthly Charges: {{ current_user.monthlyChargesEmployer }}</p>
+            {% elif current_user.userType|string() == 'Employee' %}
+            <p class="text-secondary">Monthly Charges: {{ current_user.monthlyChargesEmployee }}</p>
+            {% endif %}
+
         </div>
       </div>
         <form method="POST" action="" enctype="multipart/form-data">
@@ -41,6 +47,35 @@
                         {{ form.name(class="form-control form-control-lg") }}
                     {% endif %}
                 </div>
+            {% if current_user.userType|string() == 'Employee' %}
+                <div class="form-group">
+                    {{ form.monthlyChargesEmployee.label(class="form-control-label") }}
+                    {% if form.monthlyChargesEmployee.errors %}
+                        {{ form.monthlyChargesEmployee(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.monthlyChargesEmployee.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.monthlyChargesEmployee(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+            {% elif current_user.userType|string() == 'Employer' %}
+                <div class="form-group">
+                    {{ form.monthlyChargesEmployer.label(class="form-control-label") }}
+                    {% if form.monthlyChargesEmployer.errors %}
+                        {{ form.monthlyChargesEmployer(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.monthlyCharges.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.monthlyChargesEmployer(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+            {% endif %}
             </fieldset>
             <div class="form-group">
                 {{ form.submit(class="btn btn-outline-info") }}
