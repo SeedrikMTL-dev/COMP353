@@ -1,0 +1,23 @@
+<!-- Code inspired from https://github.com/CoreyMSchafer/code_snippets/tree/master/Python/Flask_Blog/08-Posts/flaskblog -->
+
+{% extends "baseTemplate.html" %}
+{% block content %}
+     <h2>{{ title }}</h2>
+    {% for user in users %}
+        {% if user.userType|string() != 'Administrator' %}
+        <article class="media content-section">
+          <div class="media-body">
+            <div class="article-content">
+                {{ user.email }}
+                <span>
+                   {% if user.condition|string() == 'Active' %}
+                      <a class="btn btn-danger mb-4" style="float: right;" href="{{ url_for('deactivate_user', user_id=user.id) }}">Deactivate</a>
+                   {% else %}
+                      <a class="btn btn-info mb-4" style="float: right;" href="{{ url_for('activate_user', user_id=user.id) }}">Activate</a>
+                   {% endif %}
+                </span></div>
+          </div>
+        </article>
+        {% endif %}
+    {% endfor %}
+{% endblock content %}

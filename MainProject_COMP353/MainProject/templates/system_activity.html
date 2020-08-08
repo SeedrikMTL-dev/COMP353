@@ -1,0 +1,13 @@
+<!-- Code inspired from https://github.com/CoreyMSchafer/code_snippets/tree/master/Python/Flask_Blog/08-Posts/flaskblog -->
+
+{% extends "baseTemplate.html" %}
+{% block content %}
+     <h2>{{ title }}</h2>
+    {% for history in history %}
+        <article class="media content-section">
+          <div class="media-body">
+            <p class="article-content">{{ history.content }}</p>
+          </div>
+        </article>
+    {% endfor %}
+{% endblock content %}
