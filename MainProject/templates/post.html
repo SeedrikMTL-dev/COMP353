@@ -1,0 +1,78 @@
+<!-- Code inspired from https://github.com/CoreyMSchafer/code_snippets/tree/master/Python/Flask_Blog/08-Posts/flaskblog -->
+
+{% extends "baseTemplate.html" %}
+{% block content %}
+  <article class="media content-section">
+    <div class="media-body">
+      <div class="article-metadata">
+        <small style="text-align:left;">
+          <a class="mr-2" href="{{ url_for('user_posts', name=post.author.name) }}">{{ post.author.name }}</a>
+          <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
+            {% if current_user.userType|string() == 'Employee' and applicationStatus|string() != 'Pending'%}
+                <span style="float:right;"><small class="text-muted" >{{ applicationStatus }}</small></span>
+            {% else %}
+                <span style="float:right;"><small class="text-muted" >{{ post.status }}</small></span>
+            {% endif %}
+        </small>
+        {% if post.author == current_user %}
+          <div>
+            <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('update_post', post_id=post.id) }}">Update</a>
+            <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal">Delete</button>
+          </div>
+        {% endif %}
+      </div>
+      <h2 class="article-title">{{ post.title }} </h2>
+      <p class="article-content">{{ post.content }}</p>
+      <a class="mr-2" href="{{ url_for('category_posts', category=post.category) }}">{{ post.category }}</a>
+      {% if current_user.userType|string() == 'Employer' %}
+        <p>Applications: {{ numOfApplications }}</p>
+          {% for applicant in userApplicants %}
+            <div>{{ applicant[0].name }}: {{ applicant[0].email }}
+            {% if applications[loop.index0].status|string() == 'Pending' %}
+                <span>
+                    <a class="btn btn-outline-danger sb-4" style="float: right; margin-left: 10px;" href="{{ url_for('reject_application', application_id=applications[loop.index0].id) }}">Reject</a>
+                    <a class="btn btn-outline-success sb-4" style="float: right;" href="{{ url_for('accept_application', application_id=applications[loop.index0].id) }}">Accept</a>
+                </span>
+            {% else %}
+                <span class="sb-4" style="float: right;" >{{ applications[loop.index0].status }}</span>
+            {% endif %}
+            </div>
+          {% endfor %}
+      {% elif current_user.userType|string() == 'Administrator' %}
+           <p>Applications: {{ numOfApplications }}</p>
+          {% for applicant in userApplicants %}
+            <div>{{ applicant[0].name }}: {{ applicant[0].email }}
+                <span class="sb-4" style="float: right;" >{{ applications[loop.index0].status }}</span>
+            </div>
+          {% endfor %}
+      {% endif %}
+      {% if post.status|string() == 'Open' and current_user.userType|string() == 'Employee' and
+      current_user.monthlyChargesEmployee|string() != 'Basic - No Charge'%}
+        {% if appliedToPost %}
+           <a class="btn btn-outline-info mb-4" style="float: right;" href="{{ url_for('withdraw_post', post_id=post.id) }}">Withdraw</a>
+        {% else %}
+           <a class="btn btn-info mb-4" style="float: right;" href="{{ url_for('apply_post', post_id=post.id) }}">Apply</a>
+        {% endif %}
+      {% endif %}
+    </div>
+  </article>
+  <!-- Modal -->
+  <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteModalLabel">Delete Post?</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <form action="{{ url_for('delete_post', post_id=post.id) }}" method="POST">
+            <input class="btn btn-danger" type="submit" value="Delete">
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}

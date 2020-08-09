@@ -1,0 +1,41 @@
+<!-- Code inspired from https://github.com/CoreyMSchafer/code_snippets/tree/master/Python/Flask_Blog/08-Posts/flaskblog -->
+
+{% extends "baseTemplate.html" %}
+{% block content %}
+    <h1 class="mb-3">Posts by {{ category }} ({{ posts.total }})</h1>
+    {% for post in posts.items %}
+        <article class="media content-section">
+          <div class="media-body">
+            <div class="article-metadata">
+              <small style="text-align:left;">
+              <a class="mr-2" href="{{ url_for('user_posts', name=post.author.name) }}">{{ post.author.name }}</a>
+              <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
+              <span style="float:right;"><small class="text-muted" >{{ post.status }}</small></span>
+             </small>
+            </div>
+            <h2><a class="article-title" href="{{ url_for('post', post_id=post.id) }}">{{ post.title }}</a></h2>
+            <p class="article-content">{{ post.content }}</p>
+            <a class="mr-2" href="{{ url_for('category_posts', category=post.category) }}">{{ post.category }}</a>
+            {% if post.status|string() == 'Open' and current_user.userType|string() == 'Employee' and
+                    current_user.monthlyChargesEmployee|string() != 'Basic - No Charge'%}
+                {% if appliedToPost[loop.index0] %}
+                    <a class="btn btn-outline-info mb-4" style="float: right;" href="{{ url_for('withdraw_post', post_id=post.id) }}">Withdraw</a>
+                {% else %}
+                    <a class="btn btn-info mb-4" style="float: right;" href="{{ url_for('apply_post', post_id=post.id) }}">Apply</a>
+                {% endif %}
+            {% endif %}
+          </div>
+        </article>
+    {% endfor %}
+    {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+        {% if page_num %}
+            {% if posts.page == page_num %}
+                <a class="btn btn-info mb-4" href="{{ url_for('category_posts', category=category, page=page_num) }}">{{ page_num }}</a>
+            {% else %}
+                <a class="btn btn-outline-info mb-4" href="{{ url_for('category_posts', category=category, page=page_num) }}">{{ page_num }}</a>
+            {% endif %}
+        {% else %}
+            ...
+        {% endif %}
+    {% endfor %}
+{% endblock content %}

@@ -1,0 +1,8 @@
+<!-- Code inspired from https://github.com/CoreyMSchafer/code_snippets/tree/master/Python/Flask_Blog/08-Posts/flaskblog -->
+
+{% extends "baseTemplate.html" %}
+{% block content %}
+    <a class='btn btn-info' href="{{ url_for('register_user') }}">Register as Admin</a>
+    <a class='btn btn-info' href="{{ url_for('register_employer') }}">Register as Employer</a>
+    <a class='btn btn-info' href="{{ url_for('register_employee') }}">Register as Employee</a>
+{% endblock content %}
