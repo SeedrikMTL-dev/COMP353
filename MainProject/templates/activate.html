@@ -2,22 +2,25 @@
 
 {% extends "baseTemplate.html" %}
 {% block content %}
-     <h2>{{ title }}</h2>
+    <h2>{{ title }}</h2>
     {% for user in users %}
         {% if user.userType|string() != 'Administrator' %}
-        <article class="media content-section">
-          <div class="media-body">
-            <div class="article-content">
-                {{ user.email }}
-                <span>
-                   {% if user.condition|string() == 'Active' %}
-                      <a class="btn btn-danger mb-4" style="float: right;" href="{{ url_for('deactivate_user', user_id=user.id) }}">Deactivate</a>
-                   {% else %}
-                      <a class="btn btn-info mb-4" style="float: right;" href="{{ url_for('activate_user', user_id=user.id) }}">Activate</a>
-                   {% endif %}
-                </span></div>
-          </div>
-        </article>
+                    <div>
+                        {{ user.email }}
+                        <span>
+
+                {% if user.condition|string() == 'Active' %}
+                    <a class="btn btn-danger sb-4" style="float: right; margin-left: 10px;" href="{{ url_for('deactivate_user', user_id=user.id) }}">Deactivate</a>
+                {% else %}
+                    <a class="btn btn-info sb-4" style="float: right; margin-left: 10px;" href="{{ url_for('activate_user', user_id=user.id) }}">Activate</a>
+                {% endif %}
+                            {% if user.frozen %}
+                    <a class="btn btn-info sb-4" style="float: right;" href="{{ url_for('unfreeze_user', user_id=user.id) }}">Unfreeze</a>
+                {% else %}
+                    <a class="btn btn-warning sb-4" style="float: right;" href="{{ url_for('freeze_user', user_id=user.id) }}">Freeze</a>
+                {% endif %}
+                </span>
+                    </div>
         {% endif %}
     {% endfor %}
 {% endblock content %}

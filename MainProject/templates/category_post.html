@@ -17,7 +17,7 @@
             <p class="article-content">{{ post.content }}</p>
             <a class="mr-2" href="{{ url_for('category_posts', category=post.category) }}">{{ post.category }}</a>
             {% if post.status|string() == 'Open' and current_user.userType|string() == 'Employee' and
-                    current_user.monthlyChargesEmployee|string() != 'Basic - No Charge'%}
+                    current_user.employeeMembership|string() != 'Basic - No Charge'%}
                 {% if appliedToPost[loop.index0] %}
                     <a class="btn btn-outline-info mb-4" style="float: right;" href="{{ url_for('withdraw_post', post_id=post.id) }}">Withdraw</a>
                 {% else %}

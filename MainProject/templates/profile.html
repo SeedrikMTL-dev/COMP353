@@ -3,20 +3,11 @@
 {% extends "baseTemplate.html" %}
 {% block content %}
     <div class="content-section">
-      <div class="media">
-        <div class="media-body">
-          <h2 class="account-heading">{{ current_user.name }}</h2>
-          <p class="text-secondary">User Type: {{ current_user.userType }}</p>
-            <p class="text-secondary">User: {{ current_user }}</p>
-            <p class="text-secondary">Email: {{ current_user.email }}</p>
-            {% if current_user.userType|string() == 'Employer' %}
-            <p class="text-secondary">Monthly Charges: {{ current_user.monthlyChargesEmployer }}</p>
-            {% elif current_user.userType|string() == 'Employee' %}
-            <p class="text-secondary">Monthly Charges: {{ current_user.monthlyChargesEmployee }}</p>
-            {% endif %}
-
+        <div class="media">
+            <div class="media-body">
+                <h2 class="account-heading">{{ current_user.name }}</h2>
+            </div>
         </div>
-      </div>
         <form method="POST" action="" enctype="multipart/form-data">
             {{ form.hidden_tag() }}
             <fieldset class="form-group">
@@ -34,7 +25,7 @@
                         {{ form.email(class="form-control form-control-lg") }}
                     {% endif %}
                 </div>
-            <div class="form-group">
+                <div class="form-group">
                     {{ form.name.label(class="form-control-label") }}
                     {% if form.name.errors %}
                         {{ form.name(class="form-control form-control-lg is-invalid") }}
@@ -47,35 +38,173 @@
                         {{ form.name(class="form-control form-control-lg") }}
                     {% endif %}
                 </div>
-            {% if current_user.userType|string() == 'Employee' %}
-                <div class="form-group">
-                    {{ form.monthlyChargesEmployee.label(class="form-control-label") }}
-                    {% if form.monthlyChargesEmployee.errors %}
-                        {{ form.monthlyChargesEmployee(class="form-control form-control-lg is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.monthlyChargesEmployee.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
+                {% if current_user.userType|string() == 'Employee' %}
+                    <div class="form-group">
+                        {{ form.employeeMembership.label(class="form-control-label") }}
+                        {% if form.employeeMembership.errors %}
+                            {{ form.employeeMembership(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.employeeMembership.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.employeeMembership(class="form-control form-control-lg") }}
+                        {% endif %}
+                    </div>
+                    {% if current_user.employeeMembership|string() != 'Basic - No Charge' %}
+                        <div class="form-group">
+                            {{ form.cvc.label(class="form-control-label") }}
+                            {% if form.cvc.errors %}
+                                {{ form.cvc(class="form-control form-control-lg is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.cvc.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ form.cvc(class="form-control form-control-lg") }}
+                            {% endif %}
                         </div>
-                    {% else %}
-                        {{ form.monthlyChargesEmployee(class="form-control form-control-lg") }}
-                    {% endif %}
-                </div>
-            {% elif current_user.userType|string() == 'Employer' %}
-                <div class="form-group">
-                    {{ form.monthlyChargesEmployer.label(class="form-control-label") }}
-                    {% if form.monthlyChargesEmployer.errors %}
-                        {{ form.monthlyChargesEmployer(class="form-control form-control-lg is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.monthlyCharges.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
+                        <div class="form-group">
+                            {{ form.cardNum.label(class="form-control-label") }}
+                            {% if form.cardNum.errors %}
+                                {{ form.cardNum(class="form-control form-control-lg is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.cardNum.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ form.cardNum(class="form-control form-control-lg") }}
+                            {% endif %}
                         </div>
-                    {% else %}
-                        {{ form.monthlyChargesEmployer(class="form-control form-control-lg") }}
+                        <div class="form-group">
+                            {{ form.expireDate.label(class="form-control-label") }}
+                            {% if form.expireDate.errors %}
+                                {{ form.expireDate(class="form-control form-control-lg is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.expireDate.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ form.expireDate(class="form-control form-control-lg") }}
+                            {% endif %}
+                        </div>
+                        <div class="form-group">
+                            {{ form.withdrawType.label(class="form-control-label") }}
+                            {% if form.withdrawType.errors %}
+                                {{ form.withdrawType(class="form-control form-control-lg is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.withdrawType.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ form.withdrawType(class="form-control form-control-lg") }}
+                            {% endif %}
+                        </div>
+                        <div>
+                            <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('new_payment_method', user_id=current_user.id) }}">New Payment Method</a>
+                        </div>
+                        {% for paymentMethod in paymentMethods %}
+                            <article class="media content-section">
+                                <div class="media-body">
+                                    <h3>Alternate Payment Method {{ loop.index }}</h3>
+                                    <p class="article-content">Card Number: {{ paymentMethod.cardNum }}</p>
+                                    <p class="article-content">CVC: {{ paymentMethod.cvc }}</p>
+                                    <p class="article-content">Expiration Date: {{ paymentMethod.expireDate }}</p>
+                                    <p class="article-content">Withdraw Type: {{ paymentMethod.withdrawType }}</p>
+                                    <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('update_payment_method', payment_method_id=paymentMethod.id) }}">Update</a>
+                                    <a class="btn btn-danger btn-sm mt-1 mb-1" href="{{ url_for('delete_payment_method', payment_method_id=paymentMethod.id) }}">Delete</a>
+                                </div>
+                            </article>
+                        {% endfor %}
                     {% endif %}
-                </div>
-            {% endif %}
+                {% elif current_user.userType|string() == 'Employer' %}
+                    <div class="form-group">
+                        {{ form.employerMembership.label(class="form-control-label") }}
+                        {% if form.employerMembership.errors %}
+                            {{ form.employerMembership(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.employerMembership.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.employerMembership(class="form-control form-control-lg") }}
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        {{ form.cvc.label(class="form-control-label") }}
+                        {% if form.cvc.errors %}
+                            {{ form.cvc(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.cvc.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.cvc(class="form-control form-control-lg") }}
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        {{ form.cardNum.label(class="form-control-label") }}
+                        {% if form.cardNum.errors %}
+                            {{ form.cardNum(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.cardNum.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.cardNum(class="form-control form-control-lg") }}
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        {{ form.expireDate.label(class="form-control-label") }}
+                        {% if form.expireDate.errors %}
+                            {{ form.expireDate(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.expireDate.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.expireDate(class="form-control form-control-lg") }}
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        {{ form.withdrawType.label(class="form-control-label") }}
+                        {% if form.withdrawType.errors %}
+                            {{ form.withdrawType(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.withdrawType.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.withdrawType(class="form-control form-control-lg") }}
+                        {% endif %}
+                    </div>
+                    <div>
+                            <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('new_payment_method', user_id=current_user.id) }}">New Payment Method</a>
+                        </div>
+                        {% for paymentMethod in paymentMethods %}
+                            <article class="media content-section">
+                                <div class="media-body">
+                                    <h3>Alternate Payment Method {{ loop.index }}</h3>
+                                    <p class="article-content">Card Number: {{ paymentMethod.cardNum }}</p>
+                                    <p class="article-content">CVC: {{ paymentMethod.cvc }}</p>
+                                    <p class="article-content">Expiration Date: {{ paymentMethod.expireDate }}</p>
+                                    <p class="article-content">Withdraw Type: {{ paymentMethod.withdrawType }}</p>
+                                    <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('update_payment_method', payment_method_id=paymentMethod.id) }}">Update</a>
+                                    <a class="btn btn-danger btn-sm mt-1 mb-1" href="{{ url_for('delete_payment_method', payment_method_id=paymentMethod.id) }}">Delete</a>
+                                </div>
+                            </article>
+                        {% endfor %}
+                {% endif %}
             </fieldset>
             <div class="form-group">
                 {{ form.submit(class="btn btn-outline-info") }}
@@ -86,22 +215,22 @@
         </form>
     </div>
     <!-- Modal -->
-  <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="deleteModalLabel">Delete Account?</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Delete Account?</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <form action="{{ url_for('delete_user', user_id=current_user.id) }}" method="POST">
+                        <input class="btn btn-danger" type="submit" value="Delete">
+                    </form>
+                </div>
+            </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <form action="{{ url_for('delete_user', user_id=current_user.id) }}" method="POST">
-            <input class="btn btn-danger" type="submit" value="Delete">
-          </form>
-        </div>
-      </div>
     </div>
-  </div>
 {% endblock content %}

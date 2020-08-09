@@ -5,8 +5,8 @@ import secrets
 from flask import render_template, url_for, flash, redirect, request, abort
 from MainProject import app, db, bcrypt, mail
 from MainProject.forms import (RegistrationForm, LoginForm, UpdateAccountForm,
-                               PostForm, RequestResetForm, ResetPasswordForm)
-from MainProject.models import User, Post, Application, History
+                               PostForm, RequestResetForm, ResetPasswordForm, PaymentMethodForm)
+from MainProject.models import User, Post, Application, History, Employer, Employee, PaymentMethod
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_mail import Message
 
@@ -37,6 +37,13 @@ def register():
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
         user = User(email=form.email.data, name=form.name.data, password=hashed_password, userType=form.userType.data)
+        if user.userType == 'Employer':
+            flash('Employers must enter payment info', 'danger')
+            return redirect(url_for('employer_registration', user_email=user.email, user_name=user.name,
+                                    user_userType=user.userType))
+        elif user.userType == 'Employee':
+            employee = Employee(email=user.email, name=user.name, password=user.password, userType=user.userType)
+            db.session.add(employee)
         db.session.add(user)
         flash(user.userType, 'warning')
         flash('Your account has been created! You are now able to log in', 'success')
@@ -45,7 +52,31 @@ def register():
         db.session.add(history)
         db.session.commit()
         return redirect(url_for('login'))
-    return render_template('register.html', title='Register', form=form)
+    return render_template('register.html', title='Register', form=form, isEmployer=False)
+
+
+@app.route("/register_registration/<string:user_email>/<string:user_name>/<string:user_userType>", methods=['GET', 'POST'])
+def employer_registration(user_email, user_name, user_userType):
+    form = RegistrationForm()
+    form.name.data = user_name
+    form.email.data = user_email
+    form.userType.data = user_userType
+    if form.validate_on_submit():
+        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        user1 = User(email=form.email.data, name=form.name.data, password=hashed_password, userType=form.userType.data,
+                    cvc=form.cvc.data, cardNum=form.cardNum.data, expireDate=form.expireDate.data)
+        employer = Employer(email=user1.email, name=user1.name, password=user1.password, userType=user1.userType,
+                            cvc=user1.cvc, cardNum=user1.cardNum, expireDate=user1.expireDate)
+        db.session.add(employer)
+        db.session.add(user1)
+        flash(user1.userType, 'warning')
+        flash('Your account has been created! You are now able to log in', 'success')
+        historyContent = user1.email + "'s account has been created!"
+        history = History(content= historyContent)
+        db.session.add(history)
+        db.session.commit()
+        return redirect(url_for('login'))
+    return render_template('register.html', title='Register', form=form, isEmployer=True)
 
 
 @app.route("/login", methods=['GET', 'POST'])
@@ -90,14 +121,25 @@ def logout():
 @app.route("/profile", methods=['GET', 'POST'])
 @login_required
 def profile():
+    paymentMethods = PaymentMethod.query.filter_by(user_id=current_user.id).all()
     form = UpdateAccountForm()
     if form.validate_on_submit():
         current_user.email = form.email.data
         current_user.name = form.name.data
+        if current_user.employeeMembership != 'Basic - No Charge' or current_user.userType == 'Employer':
+            current_user.cvc = form.cvc.data
+            current_user.cardNum = form.cardNum.data
+            current_user.expireDate = form.expireDate.data
+            current_user.withdrawType = form.withdrawType.data
+            if current_user.cvc == '' or current_user.cardNum == '' or current_user.expireDate == '':
+                flash('Credit card info required', 'danger')
+                return redirect(url_for('profile'))
         if current_user.userType == 'Employer':
-            current_user.monthlyChargesEmployer = form.monthlyChargesEmployer.data
+            current_user.employerMembership = form.employerMembership.data
+            db.session.commit()
         if current_user.userType == 'Employee':
-            current_user.monthlyChargesEmployee = form.monthlyChargesEmployee.data
+            current_user.employeeMembership = form.employeeMembership.data
+            db.session.commit()
         flash('Your profile has been updated!', 'success')
         historyContent=current_user.email + " has updated their profile."
         history = History(content=historyContent)
@@ -107,20 +149,24 @@ def profile():
     elif request.method == 'GET':
         form.email.data = current_user.email
         form.name.data = current_user.name
+        if current_user.employeeMembership != 'Basic - No Charge' or current_user.userType == 'Employer':
+            form.cvc.data = current_user.cvc
+            form.cardNum.data = current_user.cardNum
+            form.expireDate.data = current_user.expireDate
+            form.withdrawType.data = current_user.withdrawType
         if current_user.userType == 'Employer':
-            form.monthlyChargesEmployer.data = current_user.monthlyChargesEmployer
+            form.employerMembership.data = current_user.employerMembership
         if current_user.userType == 'Employee':
-            form.monthlyChargesEmployee.data = current_user.monthlyChargesEmployee
-    return render_template('profile.html', title='Profile', form=form)
+            form.employeeMembership.data = current_user.employeeMembership
+    return render_template('profile.html', title='Profile', form=form, paymentMethods=paymentMethods)
 
 
 @app.route("/post/new", methods=['GET', 'POST'])
 @login_required
 def new_post():
     user = User.query.filter_by(name=current_user.name).first_or_404()
-#    posts = Post.query.filter_by(author=user)
     postCount = Post.query.filter_by(author=user).count()
-    if postCount < 5 or current_user.monthlyChargesEmployer == 'Gold - 100$/month':
+    if postCount < 5 or current_user.employerMembership == 'Gold - 100$/month':
         form = PostForm()
         if form.validate_on_submit():
             post = Post(title=form.title.data, content=form.content.data, author=current_user, category=form.category.data,
@@ -206,6 +252,7 @@ def delete_post(post_id):
     db.session.add(history)
     db.session.commit()
     return redirect(url_for('home'))
+
 
 @app.route("/profile/<int:user_id>/delete", methods=['POST'])
 @login_required
@@ -302,7 +349,7 @@ def reset_token(token):
 def apply_post(post_id):
     post = Post.query.get_or_404(post_id)
     applicationCount = Application.query.filter_by(user_id=current_user.id).count()
-    if applicationCount < 5 or current_user.monthlyChargesEmployee == 'Gold - 20$/month':
+    if applicationCount < 5 or current_user.employeeMembership == 'Gold - 20$/month':
         application = Application(user_id=current_user.id, post_id=post.id)
         db.session.add(application)
         flash('Application Submitted', 'success')
@@ -385,6 +432,83 @@ def deactivate_user(user_id):
     user = User.query.filter_by(id=user_id).first()
     user.condition = 'Inactive'
     historyContent = current_user.email + " has been deactivated."
+    history = History(content=historyContent)
+    db.session.add(history)
+    db.session.commit()
+    return redirect(url_for('activate'))
+
+
+@app.route("/payment_method/<int:user_id>/new", methods=['GET', 'POST'])
+@login_required
+def new_payment_method(user_id):
+    form = PaymentMethodForm()
+    if form.validate_on_submit():
+        new_payment_method = PaymentMethod(cardNum=form.cardNum.data, cvc=form.cvc.data, expireDate=form.expireDate.data,
+                    withdrawType=form.withdrawType.data, user_id=user_id)
+        db.session.add(new_payment_method)
+        flash('Your payment method has been added!', 'success')
+        historyContent=current_user.email + " has added a payment method."
+        history = History(content=historyContent)
+        db.session.add(history)
+        db.session.commit()
+        return redirect(url_for('profile'))
+    return render_template('create_payment_method.html', title='Aternate Payment Method', form=form, legend='Alternate Payment Method')
+
+
+@app.route("/payment_method/<int:payment_method_id>/update", methods=['GET', 'POST'])
+@login_required
+def update_payment_method(payment_method_id):
+    payment_method = PaymentMethod.query.get_or_404(payment_method_id)
+    form = PaymentMethodForm()
+    if form.validate_on_submit():
+        payment_method.cardNum = form.cardNum.data
+        payment_method.cvc = form.cvc.data
+        payment_method.expireDate = form.expireDate.data
+        payment_method.withdrawType = form.withdrawType.data
+        flash('Your payment method has been updated!', 'success')
+        historyContent=current_user.email + " updated a payment method."
+        history = History(content=historyContent)
+        db.session.add(history)
+        db.session.commit()
+        return redirect(url_for('profile'))
+    elif request.method == 'GET':
+        form.cardNum.data = payment_method.cardNum
+        form.cvc.data = payment_method.cvc
+        form.expireDate.data = payment_method.expireDate
+        form.withdrawType.data = payment_method.withdrawType
+    return render_template('update_payment_method.html', title='Update Payment Method',
+                           form=form, legend='Update Payment Method')
+
+
+@app.route("/payment_method/<int:payment_method_id>/delete", methods=['GET', 'POST'])
+@login_required
+def delete_payment_method(payment_method_id):
+    payment_method = PaymentMethod.query.get_or_404(payment_method_id)
+    db.session.delete(payment_method)
+    flash('Your payment method has been deleted!', 'success')
+    historyContent=current_user.email + " deleted a payment method."
+    history = History(content=historyContent)
+    db.session.add(history)
+    db.session.commit()
+    return redirect(url_for('profile'))
+
+@app.route("/activate/<int:user_id>/unfreeze", methods=['GET', 'POST'])
+@login_required
+def unfreeze_user(user_id):
+    user = User.query.filter_by(id=user_id).first()
+    user.frozen = False
+    historyContent = current_user.email + " has been unfrozen."
+    history = History(content=historyContent)
+    db.session.add(history)
+    db.session.commit()
+    return redirect(url_for('activate'))
+
+@app.route("/activate/<int:user_id>/freeze", methods=['GET', 'POST'])
+@login_required
+def freeze_user(user_id):
+    user = User.query.filter_by(id=user_id).first()
+    user.frozen = True
+    historyContent = current_user.email + " has been frozen."
     history = History(content=historyContent)
     db.session.add(history)
     db.session.commit()

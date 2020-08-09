@@ -7,7 +7,7 @@
             {{ form.hidden_tag() }}
             <fieldset class="form-group">
                 <legend class="border-bottom mb-4">Join Today</legend>
-            <div class="form-group">
+                <div class="form-group">
                     {{ form.userType.label(class="form-control-label") }}
                     {% if form.userType.errors %}
                         {{ form.userType(class="form-control form-control-lg is-invalid") }}
@@ -20,7 +20,7 @@
                         {{ form.userType(class="form-control form-control-lg") }}
                     {% endif %}
                 </div>
-            <div class="form-group">
+                <div class="form-group">
                     {{ form.name.label(class="form-control-label") }}
                     {% if form.name.errors %}
                         {{ form.name(class="form-control form-control-lg is-invalid") }}
@@ -72,6 +72,47 @@
                         {{ form.confirm_password(class="form-control form-control-lg") }}
                     {% endif %}
                 </div>
+                {% if isEmployer %}
+                    <div class="form-group">
+                        {{ form.cvc.label(class="form-control-label") }}
+                        {% if form.cvc.errors %}
+                            {{ form.cvc(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.cvc.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.cvc(class="form-control form-control-lg") }}
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        {{ form.cardNum.label(class="form-control-label") }}
+                        {% if form.cardNum.errors %}
+                            {{ form.cardNum(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.cardNum.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.cardNum(class="form-control form-control-lg") }}
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        {{ form.expireDate.label(class="form-control-label") }}
+                        {% if form.expireDate.errors %}
+                            {{ form.expireDate(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.expireDate.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.expireDate(class="form-control form-control-lg") }}
+                        {% endif %}
+                    </div>
+                {% endif %}
             </fieldset>
             <div class="form-group">
                 {{ form.submit(class="btn btn-outline-info") }}

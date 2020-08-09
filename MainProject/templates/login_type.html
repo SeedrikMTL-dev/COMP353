@@ -1,8 +1,0 @@
-<!-- Code inspired from https://github.com/CoreyMSchafer/code_snippets/tree/master/Python/Flask_Blog/08-Posts/flaskblog -->
-
-{% extends "baseTemplate.html" %}
-{% block content %}
-    <a class='btn btn-info' href="{{ url_for('login_admin') }}">Log in as Admin</a>
-    <a class='btn btn-info' href="{{ url_for('login_employer') }}">Log in as Employer</a>
-    <a class='btn btn-info' href="{{ url_for('login_employee') }}">Log in as Employee</a>
-{% endblock content %}
