@@ -6,7 +6,9 @@
     {% for user in users %}
         {% if user.userType|string() != 'Administrator' %}
                     <div>
-                        {{ user.email }}
+                    <hr/>
+                    <br />
+                        {{ user.email }}, <small>{{ user.userType }}</small>
                         <span>
 
                 {% if user.condition|string() == 'Active' %}
@@ -19,7 +21,9 @@
                 {% else %}
                     <a class="btn btn-warning sb-4" style="float: right;" href="{{ url_for('freeze_user', user_id=user.id) }}">Freeze</a>
                 {% endif %}
+                        <br />
                 </span>
+                    <br />
                     </div>
         {% endif %}
     {% endfor %}

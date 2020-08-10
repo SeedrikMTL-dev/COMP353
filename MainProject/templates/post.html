@@ -26,13 +26,16 @@
       <a class="mr-2" href="{{ url_for('category_posts', category=post.category) }}">{{ post.category }}</a>
       {% if current_user.userType|string() == 'Employer' %}
         <p>Applications: {{ numOfApplications }}</p>
+          <hr />
           {% for applicant in userApplicants %}
             <div>{{ applicant[0].name }}: {{ applicant[0].email }}
             {% if applications[loop.index0].status|string() == 'Pending' %}
                 <span>
                     <a class="btn btn-outline-danger sb-4" style="float: right; margin-left: 10px;" href="{{ url_for('reject_application', application_id=applications[loop.index0].id) }}">Reject</a>
                     <a class="btn btn-outline-success sb-4" style="float: right;" href="{{ url_for('accept_application', application_id=applications[loop.index0].id) }}">Accept</a>
+                <br />
                 </span>
+                <br />
             {% else %}
                 <span class="sb-4" style="float: right;" >{{ applications[loop.index0].status }}</span>
             {% endif %}

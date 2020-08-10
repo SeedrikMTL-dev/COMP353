@@ -34,6 +34,11 @@ class LoginForm(FlaskForm):
     remember = BooleanField('Remember Me')
     submit = SubmitField('Login')
 
+    def validate_email(self, email):
+        user = User.query.filter_by(email=email.data).first()
+        if not user:
+            raise ValidationError('That email does not exist. Please choose a valid one.')
+
 
 class UpdateAccountForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
